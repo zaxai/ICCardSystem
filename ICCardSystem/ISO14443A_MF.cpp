@@ -120,7 +120,7 @@ void ISO14443A_MF::ByteArrToCString(const BYTE * p_cSrc, const int & nSrcSize, C
 }
 
 
-int ISO14443A_MF::ControlLED(const int & nFreq,const int & nDuration)
+int ISO14443A_MF::ControlLED(const int & nFreq, const int & nDuration)
 {
 	typedef int(_stdcall * ControlLED)(unsigned char freq, unsigned char duration, unsigned char * buffer);
 	ControlLED ctrlled;

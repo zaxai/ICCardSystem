@@ -33,7 +33,7 @@ bool CCardOperator::ReadCard(CString & strCard, CString & strError, bool bIsCtrl
 	else
 	{
 		ISO14443A_MF block_0B(0x00, 0x0B, 1, 0x02, _T("FFFFFFFFFFFF"));
-		int nRtn_0B = block_0B.MF_Write(_T("FFFFFFFFFFFF08778F69010203070901"));
+		int nRtn_0B = block_0B.MF_Write(_T("53546364737408778F69010203070901"));
 		if (!nRtn_0B)
 		{
 			int nRtn_0A = block_0A.MF_Read(strCard);
@@ -61,7 +61,7 @@ bool CCardOperator::ReadCard(CString & strCard, CString & strError, bool bIsCtrl
 			strError = block_0B.ErrorInfo(nRtn_0B);
 			if (nRtn_0B == 0x01)
 			{
-				strError +=_T("\r\n") + block_0B.ErrorReason(block_0B.GetErrorCode());
+				strError += _T("\r\n") + block_0B.ErrorReason(block_0B.GetErrorCode());
 			}
 		}
 	}
@@ -95,7 +95,7 @@ bool CCardOperator::WriteCard(const CString & strCard, CString & strError, bool 
 	else
 	{
 		ISO14443A_MF block_0B(0x00, 0x0B, 1, 0x02, _T("FFFFFFFFFFFF"));
-		int nRtn_0B = block_0B.MF_Write(_T("FFFFFFFFFFFF08778F69010203070901"));
+		int nRtn_0B = block_0B.MF_Write(_T("53546364737408778F69010203070901"));
 		if (!nRtn_0B)
 		{
 			int nRtn_0A = block_0A.MF_Write(strCard);
