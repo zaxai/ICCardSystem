@@ -96,13 +96,7 @@
     <ClInclude Include="CReturnDepositRecordDB.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="CUserReopenCard.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="CRecordDB.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="CReopenCardRecordDB.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="CUserCloseCard.h">
@@ -111,19 +105,7 @@
     <ClInclude Include="CToolReadCard.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="CToolResetCard.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="CToolTestCard.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="CToolQueryCard.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="CToolSetCard.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="CToolPriceCard.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="CUserInfoQuery.h">
@@ -162,10 +144,31 @@
     <ClInclude Include="CRange.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="CExcelExport.h">
+    <ClInclude Include="ZOperatorExcelFile.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="ZOperatorExcelFile.h">
+    <ClInclude Include="CToolLicenseCard.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CCard.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CCardDB.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CInitDepositRecordDB.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ZExcelExport.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ZExcelImport.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ZButton.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CToolClearCard.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -242,13 +245,7 @@
     <ClCompile Include="CReturnDepositRecordDB.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="CUserReopenCard.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="CRecordDB.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="CReopenCardRecordDB.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="CUserCloseCard.cpp">
@@ -257,19 +254,7 @@
     <ClCompile Include="CToolReadCard.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="CToolResetCard.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="CToolTestCard.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="CToolQueryCard.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="CToolSetCard.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="CToolPriceCard.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="CUserInfoQuery.cpp">
@@ -290,10 +275,31 @@
     <ClCompile Include="CUserPrestoreStatistics.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="CExcelExport.cpp">
+    <ClCompile Include="ZOperatorExcelFile.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="ZOperatorExcelFile.cpp">
+    <ClCompile Include="CToolLicenseCard.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CCard.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CCardDB.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CInitDepositRecordDB.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ZExcelExport.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ZExcelImport.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ZButton.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CToolClearCard.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -319,6 +325,9 @@
       <Filter>资源文件</Filter>
     </Image>
     <Image Include="res\BkGnd.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\Logo.bmp">
       <Filter>资源文件</Filter>
     </Image>
   </ItemGroup>

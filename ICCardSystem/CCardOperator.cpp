@@ -20,7 +20,8 @@ bool CCardOperator::ReadCard(CString & strCard, CString & strError, bool bIsCtrl
 		ctrl.ControlLED(0x16, 10);
 	}
 	ISO14443A_MF block_0A;
-	if (!block_0A.MF_Read(strCard))
+	int nRtn_0A = block_0A.MF_Read(strCard);
+	if (!nRtn_0A)
 	{
 		if (bIsCtrlReader)
 		{
@@ -32,45 +33,56 @@ bool CCardOperator::ReadCard(CString & strCard, CString & strError, bool bIsCtrl
 	}
 	else
 	{
-		ISO14443A_MF block_0B(0x00, 0x0B, 1, 0x02, _T("FFFFFFFFFFFF"));
-		int nRtn_0B = block_0B.MF_Write(_T("53546364737408778F69010203070901"));
-		if (!nRtn_0B)
+		strError = block_0A.ErrorInfo(nRtn_0A);
+		if (nRtn_0A == 0x01)
 		{
-			int nRtn_0A = block_0A.MF_Read(strCard);
-			if (!nRtn_0A)
-			{
-				if (bIsCtrlReader)
-				{
-					ISO14443A_MF ctrl;
-					ctrl.ControlLED(0x16, 0);
-					ctrl.ControlBuzzer(0x16, 1);
-				}
-				return true;
-			}
-			else
-			{
-				strError = block_0A.ErrorInfo(nRtn_0A);
-				if (nRtn_0A == 0x01)
-				{
-					strError += _T("\r\n") + block_0A.ErrorReason(block_0A.GetErrorCode());
-				}
-			}
+			strError += _T("\r\n") + block_0A.ErrorReason(block_0A.GetErrorCode());
 		}
-		else
+		if (bIsCtrlReader)
 		{
-			strError = block_0B.ErrorInfo(nRtn_0B);
-			if (nRtn_0B == 0x01)
-			{
-				strError += _T("\r\n") + block_0B.ErrorReason(block_0B.GetErrorCode());
-			}
+			ISO14443A_MF ctrl;
+			ctrl.ControlLED(0x16, 0);
 		}
+		return false;
 	}
+}
+
+
+bool CCardOperator::ReadCardNo(CString & strCardNo, CString & strError, bool bIsCtrlReader)
+{
+	CString strCard;
 	if (bIsCtrlReader)
 	{
 		ISO14443A_MF ctrl;
-		ctrl.ControlLED(0x16, 0);
+		ctrl.ControlLED(0x16, 10);
 	}
-	return false;
+	ISO14443A_MF block_00(0x00, 0x00, 1, 0x00, _T("FFFFFFFFFFFF"));
+	int nRtn_0A = block_00.MF_Read(strCard);
+	if (!nRtn_0A)
+	{
+		strCardNo=strCard.Left(8);
+		if (bIsCtrlReader)
+		{
+			ISO14443A_MF ctrl;
+			ctrl.ControlLED(0x16, 0);
+			ctrl.ControlBuzzer(0x16, 1);
+		}
+		return true;
+	}
+	else
+	{
+		strError = block_00.ErrorInfo(nRtn_0A);
+		if (nRtn_0A == 0x01)
+		{
+			strError += _T("\r\n") + block_00.ErrorReason(block_00.GetErrorCode());
+		}
+		if (bIsCtrlReader)
+		{
+			ISO14443A_MF ctrl;
+			ctrl.ControlLED(0x16, 0);
+		}
+		return false;
+	}
 }
 
 
@@ -82,7 +94,8 @@ bool CCardOperator::WriteCard(const CString & strCard, CString & strError, bool 
 		ctrl.ControlLED(0x16, 10);
 	}
 	ISO14443A_MF block_0A;
-	if (!block_0A.MF_Write(strCard))
+	int nRtn_0A = block_0A.MF_Write(strCard);
+	if (!nRtn_0A)
 	{
 		if (bIsCtrlReader)
 		{
@@ -94,45 +107,18 @@ bool CCardOperator::WriteCard(const CString & strCard, CString & strError, bool 
 	}
 	else
 	{
-		ISO14443A_MF block_0B(0x00, 0x0B, 1, 0x02, _T("FFFFFFFFFFFF"));
-		int nRtn_0B = block_0B.MF_Write(_T("53546364737408778F69010203070901"));
-		if (!nRtn_0B)
+		strError = block_0A.ErrorInfo(nRtn_0A);
+		if (nRtn_0A == 0x01)
 		{
-			int nRtn_0A = block_0A.MF_Write(strCard);
-			if (!nRtn_0A)
-			{
-				if (bIsCtrlReader)
-				{
-					ISO14443A_MF ctrl;
-					ctrl.ControlLED(0x16, 0);
-					ctrl.ControlBuzzer(0x16, 1);
-				}
-				return true;
-			}
-			else
-			{
-				strError = block_0A.ErrorInfo(nRtn_0A);
-				if (nRtn_0A == 0x01)
-				{
-					strError += _T("\r\n") + block_0A.ErrorReason(block_0A.GetErrorCode());
-				}
-			}
+			strError += _T("\r\n") + block_0A.ErrorReason(block_0A.GetErrorCode());
 		}
-		else
+		if (bIsCtrlReader)
 		{
-			strError = block_0B.ErrorInfo(nRtn_0B);
-			if (nRtn_0B == 0x01)
-			{
-				strError += _T("\r\n") + block_0B.ErrorReason(block_0B.GetErrorCode());
-			}
+			ISO14443A_MF ctrl;
+			ctrl.ControlLED(0x16, 0);
 		}
+		return false;
 	}
-	if (bIsCtrlReader)
-	{
-		ISO14443A_MF ctrl;
-		ctrl.ControlLED(0x16, 0);
-	}
-	return false;
 }
 
 
@@ -144,16 +130,8 @@ bool CCardOperator::ClearUserCard(bool bIsCtrlReader)
 		ctrl.ControlLED(0x16, 10);
 	}
 	ISO14443A_MF block_0A;
-	if (block_0A.MF_Write(_T("00000000000000000000000000000000")))
-	{
-		if (bIsCtrlReader)
-		{
-			ISO14443A_MF ctrl;
-			ctrl.ControlLED(0x16, 0);
-		}
-		return false;
-	}
-	else
+	int nRtn_0A = block_0A.MF_Write(_T("00000000000000000000000000000000"));
+	if (!nRtn_0A)
 	{
 		if (bIsCtrlReader)
 		{
@@ -163,111 +141,93 @@ bool CCardOperator::ClearUserCard(bool bIsCtrlReader)
 		}
 		return true;
 	}
+	else
+	{
+		if (bIsCtrlReader)
+		{
+			ISO14443A_MF ctrl;
+			ctrl.ControlLED(0x16, 0);
+		}
+		return false;
+	}
 }
 
 
-void CCardOperator::DecodeCard(const CString & strCard, int & nDeviceID, int  & nUnitID, int  & nCardType)
+void CCardOperator::DecodeCard(const CString & strCard, CString & strCardNo, int  & nLicense, int  & nCardType)
 {
-	nDeviceID = _tcstol(strCard.Mid(0, 8), NULL, 16);
-	nUnitID = _tcstol(strCard.Mid(8, 4), NULL, 16);
+	strCardNo = strCard.Mid(0, 8);
+	nLicense = _tcstol(strCard.Mid(8, 4), NULL, 16);
 	nCardType = _tcstol(strCard.Mid(12, 4), NULL, 16);
 }
 
 
-CString CCardOperator::EncodeUserCard(int nDeviceID, int nUnitID, int nCardType, int nUserID, int nBalance)
+CString CCardOperator::EncodeUserCard(CString strCardNo, int nLicense, int nCardType, int nUserID, int nBalance)
 {
 	CString strCard;
-	strCard.Format(_T("%08X%04X%04X%08X%08X"), nDeviceID, nUnitID, nCardType, nUserID, nBalance);
+	strCard.Format(_T("%s%04X%04X%08X%08X"), strCardNo, nLicense, nCardType, nUserID, nBalance);
 	return strCard;
 }
 
 
-void CCardOperator::DecodeUserCard(const CString & strCard, int & nDeviceID, int  & nUnitID, int  & nCardType, int  & nUserID, int  & nBalance)
+void CCardOperator::DecodeUserCard(const CString & strCard, CString & strCardNo, int  & nLicense, int  & nCardType, int  & nUserID, int  & nBalance)
 {
-	nDeviceID = _tcstol(strCard.Mid(0, 8), NULL, 16);
-	nUnitID = _tcstol(strCard.Mid(8, 4), NULL, 16);
+	strCardNo = strCard.Mid(0, 8);
+	nLicense = _tcstol(strCard.Mid(8, 4), NULL, 16);
 	nCardType = _tcstol(strCard.Mid(12, 4), NULL, 16);
 	nUserID = _tcstol(strCard.Mid(16, 8), NULL, 16);
 	nBalance = _tcstol(strCard.Mid(24, 8), NULL, 16);
 }
 
 
-CString CCardOperator::EncodeSetCard(int nDeviceID, int nUnitID, int nCardType, int  nPortNum, int nChargeTime, int nUnitPrice)
+CString CCardOperator::EncodeSetCard(CString strCardNo, int nLicense, int nCardType, int nRuptureCurrent, int  nPortNum, int nChargeTime, int nRatedCurrent, int nUnitPrice)
 {
 	CString strCard;
-	strCard.Format(_T("%08X%04X%04X%04X%04X%08X"), nDeviceID, nUnitID, nCardType, nPortNum, nChargeTime, nUnitPrice);
+	strCard.Format(_T("%s%04X%04X%02X%02X%04X%04X%04X"), strCardNo, nLicense, nCardType, nRuptureCurrent, nPortNum, nChargeTime, nRatedCurrent, nUnitPrice);
 	return strCard;
 }
 
 
-void CCardOperator::DecodeSetCard(const CString & strCard, int & nDeviceID, int  & nUnitID, int  & nCardType, int  & nPortNum, int & nChargeTime, int & nUnitPrice)
+void CCardOperator::DecodeSetCard(const CString & strCard, CString & strCardNo, int  & nLicense, int  & nCardType, int & nRuptureCurrent, int  & nPortNum, int & nChargeTime, int & nRatedCurrent, int & nUnitPrice)
 {
-	nDeviceID = _tcstol(strCard.Mid(0, 8), NULL, 16);
-	nUnitID = _tcstol(strCard.Mid(8, 4), NULL, 16);
+	strCardNo = strCard.Mid(0, 8);
+	nLicense = _tcstol(strCard.Mid(8, 4), NULL, 16);
 	nCardType = _tcstol(strCard.Mid(12, 4), NULL, 16);
-	nPortNum = _tcstol(strCard.Mid(16, 4), NULL, 16);
+	nRuptureCurrent = _tcstol(strCard.Mid(16, 2), NULL, 16);
+	nPortNum = _tcstol(strCard.Mid(18, 2), NULL, 16);
 	nChargeTime = _tcstol(strCard.Mid(20, 4), NULL, 16);
-	nUnitPrice = _tcstol(strCard.Mid(24, 8), NULL, 16);
+	nRatedCurrent = _tcstol(strCard.Mid(24, 4), NULL, 16);
+	nUnitPrice = _tcstol(strCard.Mid(28, 4), NULL, 16);
 }
 
 
-CString CCardOperator::EncodeResetCard(int nDeviceID, int nUnitID, int nCardType,int nWriteDeviceID)
+CString CCardOperator::EncodeLicenseCard(CString strCardNo, int nLicense, int nCardType)
 {
 	CString strCard;
-	strCard.Format(_T("%08X%04X%04X%08X%08X"), nDeviceID, nUnitID, nCardType, nWriteDeviceID, 0x55555555);
+	strCard.Format(_T("%s%04X%04X%08X%08X"), strCardNo, nLicense, nCardType, 0x55555555, 0x55555555);
 	return strCard;
 }
 
 
-void CCardOperator::DecodeResetCard(const CString & strCard, int & nDeviceID, int  & nUnitID, int  & nCardType, int & nWriteDeviceID)
+void CCardOperator::DecodeLicenseCard(const CString & strCard, CString & strCardNo, int  & nLicense, int  & nCardType)
 {
-	nDeviceID = _tcstol(strCard.Mid(0, 8), NULL, 16);
-	nUnitID = _tcstol(strCard.Mid(8, 4), NULL, 16);
+	strCardNo = strCard.Mid(0, 8);
+	nLicense = _tcstol(strCard.Mid(8, 4), NULL, 16);
 	nCardType = _tcstol(strCard.Mid(12, 4), NULL, 16);
-	nWriteDeviceID = _tcstol(strCard.Mid(16, 8), NULL, 16);
 }
 
 
-CString CCardOperator::EncodePriceCard(int nDeviceID, int nUnitID, int nCardType,int nPrice)
+CString CCardOperator::EncodeClearCard(CString strCardNo, int nLicense, int nCardType, int nUsageCount)
 {
 	CString strCard;
-	strCard.Format(_T("%08X%04X%04X%08X%08X"), nDeviceID, nUnitID, nCardType, 0x00000000, nPrice);
+	strCard.Format(_T("%s%04X%04X%08X%08X"), strCardNo, nLicense, nCardType, nUsageCount, 0x66666666);
 	return strCard;
 }
 
 
-void CCardOperator::DecodePriceCard(const CString & strCard, int & nDeviceID, int  & nUnitID, int  & nCardType, int & nPrice)
+void CCardOperator::DecodeClearCard(const CString & strCard, CString & strCardNo, int  & nLicense, int  & nCardType, int & nUsageCount)
 {
-	nDeviceID = _tcstol(strCard.Mid(0, 8), NULL, 16);
-	nUnitID = _tcstol(strCard.Mid(8, 4), NULL, 16);
+	strCardNo = strCard.Mid(0, 8);
+	nLicense = _tcstol(strCard.Mid(8, 4), NULL, 16);
 	nCardType = _tcstol(strCard.Mid(12, 4), NULL, 16);
-	nPrice = _tcstol(strCard.Mid(24, 8), NULL, 16);
-}
-
-
-CString CCardOperator::EncodeQueryCard(int nDeviceID, int nUnitID, int nCardType)
-{
-	CString strCard;
-	strCard.Format(_T("%08X%04X%04X%08X%08X"), nDeviceID, nUnitID, nCardType, 0x66666666, 0x66666666);
-	return strCard;
-}
-
-
-void CCardOperator::DecodeQueryCard(const CString & strCard, int & nDeviceID, int  & nUnitID, int  & nCardType)
-{
-	DecodeCard(strCard, nDeviceID, nUnitID, nCardType);
-}
-
-
-CString CCardOperator::EncodeTestCard(int nDeviceID, int nUnitID, int nCardType)
-{
-	CString strCard;
-	strCard.Format(_T("%08X%04X%04X%08X%08X"), nDeviceID, nUnitID, nCardType, 0x66666666, 0x66666666);
-	return strCard;
-}
-
-
-void CCardOperator::DecodeTestCard(const CString & strCard, int & nDeviceID, int  & nUnitID, int  & nCardType)
-{
-	DecodeCard(strCard, nDeviceID, nUnitID, nCardType);
+	nUsageCount = _tcstol(strCard.Mid(16, 8), NULL, 16);
 }
