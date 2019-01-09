@@ -55,6 +55,22 @@ void CToolClearCard::OnBnClickedButtonClearcard()
 	nLicense = GetDlgItemInt(IDC_EDIT_LICENSE);
 	nUsageCount= GetDlgItemInt(IDC_EDIT_USAGECOUNT);
 	CString strCard, strCardNo, strError;
+	if (!CCardOperator::ReadCard(strCard, strError))
+	{
+		AfxMessageBox(_T("写卡失败!\r\n") + strError);
+		return;
+	}
+	else
+	{
+		int nLicenseOfThis, nCardTypeOfThis;
+		CString strCardNoOfThis;
+		CCardOperator::DecodeCard(strCard, strCardNoOfThis, nLicenseOfThis, nCardTypeOfThis);
+		if (nCardTypeOfThis == CCardOperator::TYPE_USER_RECHARGE || nCardTypeOfThis == CCardOperator::TYPE_USER_TIME)
+		{
+			AfxMessageBox(_T("会员卡请退卡了后再操作!"));
+			return;
+		}
+	}
 	if (!CCardOperator::ReadCardNo(strCardNo, strError))
 	{
 		AfxMessageBox(_T("写卡失败!\r\n") + strError);
