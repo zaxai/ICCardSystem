@@ -48,6 +48,43 @@ bool CCardOperator::ReadCard(CString & strCard, CString & strError, bool bIsCtrl
 }
 
 
+bool CCardOperator::ReadCard(CString & strCard, CString & strRealCardNo, CString & strError, bool bIsCtrlReader)
+{
+	if (bIsCtrlReader)
+	{
+		ISO14443A_MF ctrl;
+		ctrl.ControlLED(0x16, 10);
+	}
+	ISO14443A_MF block_0A;
+	int nRtn_0A = block_0A.MF_Read(strCard);
+	if (!nRtn_0A)
+	{
+		strRealCardNo = block_0A.GetCardNo();
+		if (bIsCtrlReader)
+		{
+			ISO14443A_MF ctrl;
+			ctrl.ControlLED(0x16, 0);
+			ctrl.ControlBuzzer(0x16, 1);
+		}
+		return true;
+	}
+	else
+	{
+		strError = block_0A.ErrorInfo(nRtn_0A);
+		if (nRtn_0A == 0x01)
+		{
+			strError += _T("\r\n") + block_0A.ErrorReason(block_0A.GetErrorCode());
+		}
+		if (bIsCtrlReader)
+		{
+			ISO14443A_MF ctrl;
+			ctrl.ControlLED(0x16, 0);
+		}
+		return false;
+	}
+}
+
+
 bool CCardOperator::ReadCardNo(CString & strCardNo, CString & strError, bool bIsCtrlReader)
 {
 	CString strCard;
@@ -97,6 +134,43 @@ bool CCardOperator::WriteCard(const CString & strCard, CString & strError, bool 
 	int nRtn_0A = block_0A.MF_Write(strCard);
 	if (!nRtn_0A)
 	{
+		if (bIsCtrlReader)
+		{
+			ISO14443A_MF ctrl;
+			ctrl.ControlLED(0x16, 0);
+			ctrl.ControlBuzzer(0x16, 1);
+		}
+		return true;
+	}
+	else
+	{
+		strError = block_0A.ErrorInfo(nRtn_0A);
+		if (nRtn_0A == 0x01)
+		{
+			strError += _T("\r\n") + block_0A.ErrorReason(block_0A.GetErrorCode());
+		}
+		if (bIsCtrlReader)
+		{
+			ISO14443A_MF ctrl;
+			ctrl.ControlLED(0x16, 0);
+		}
+		return false;
+	}
+}
+
+
+bool CCardOperator::WriteCard(const CString & strCard, CString & strRealCardNo, CString & strError, bool bIsCtrlReader)
+{
+	if (bIsCtrlReader)
+	{
+		ISO14443A_MF ctrl;
+		ctrl.ControlLED(0x16, 10);
+	}
+	ISO14443A_MF block_0A;
+	int nRtn_0A = block_0A.MF_Write(strCard);
+	if (!nRtn_0A)
+	{
+		strRealCardNo = block_0A.GetCardNo();
 		if (bIsCtrlReader)
 		{
 			ISO14443A_MF ctrl;
