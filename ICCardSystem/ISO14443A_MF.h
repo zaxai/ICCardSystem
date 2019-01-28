@@ -9,6 +9,7 @@ private:
 	unsigned char m_cSectionAddr;
 	CString m_strKey;
 	CString m_strCardNo;
+	unsigned char m_cSnrMode;
 	unsigned char m_cErrorCode;
 public:
 	static BOOL CallExDll(void);
@@ -32,6 +33,7 @@ public:
 	int MF_InitValue(const CString & strData);
 	int MF_Dec(int & nValue);
 	int MF_Inc(int & nValue);
+	int MF_Getsnr(unsigned char & cSnrResult);
 	CString ErrorInfo(int nError);
 	CString ErrorReason(unsigned char cErrorCode);
 };

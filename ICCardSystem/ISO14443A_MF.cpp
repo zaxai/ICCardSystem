@@ -11,6 +11,7 @@ ISO14443A_MF::ISO14443A_MF()
 	, m_cSectionAddr(0x02)
 	, m_strKey(_T("010203070901"))
 	, m_strCardNo(_T(""))
+	, m_cSnrMode(0x52)
 	, m_cErrorCode(0)
 {
 }
@@ -259,6 +260,28 @@ int ISO14443A_MF::MF_Inc(int & nValue)
 		if (!nRtn)
 		{
 			ByteArrToCString(sz_cSnr, 4, m_strCardNo);
+		}
+		else
+			m_cErrorCode = sz_cSnr[0];
+	}
+	return nRtn;
+}
+
+
+int ISO14443A_MF::MF_Getsnr(unsigned char & cSnrResult)
+{
+	typedef int(_stdcall * MF_Getsnr)(unsigned char mode, unsigned char halt, unsigned char * snr, unsigned char * value);
+	MF_Getsnr mfgetsnr;
+	int nRtn = -1;
+	mfgetsnr = (MF_Getsnr)GetProcAddress(m_hDll, "MF_Getsnr");
+	if (mfgetsnr)
+	{
+		unsigned char sz_cSnr[6] = { 0 }, sz_cValue[1024] = { 0 };
+		nRtn = mfgetsnr(m_cSnrMode, 0, sz_cSnr, sz_cValue);
+		if (!nRtn)
+		{
+			ByteArrToCString(sz_cValue, 4, m_strCardNo);
+			cSnrResult = sz_cSnr[0];
 		}
 		else
 			m_cErrorCode = sz_cSnr[0];

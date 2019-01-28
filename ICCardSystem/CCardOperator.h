@@ -19,6 +19,8 @@ public:
 	static bool WriteCard(const CString & strCard, CString & strError, bool bIsCtrlReader = false);
 	static bool WriteCard(const CString & strCard, CString & strRealCardNo, CString & strError, bool bIsCtrlReader = false);
 	static bool ClearUserCard(bool bIsCtrlReader = false);
+	static bool IsSingleCardStatus(bool & bSingle, CString & strError);
+	static void ControlBuzzer();
 	static void DecodeCard(const CString & strCard, CString & strCardNo, int  & nLicense, int  & nCardType);
 	static CString EncodeUserCard(CString strCardNo,int nLicense,int nCardType,int nUserID,int nBalance);
 	static void DecodeUserCard(const CString & strCard, CString & strCardNo, int  & nLicense, int  & nCardType, int  & nUserID, int  & nBalance);

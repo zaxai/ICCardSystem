@@ -227,6 +227,35 @@ bool CCardOperator::ClearUserCard(bool bIsCtrlReader)
 }
 
 
+bool CCardOperator::IsSingleCardStatus(bool & bSingle, CString & strError)
+{
+	ISO14443A_MF cardstatus;
+	unsigned char cSnrResult;
+	int nRtn = cardstatus.MF_Getsnr(cSnrResult);
+	if (!nRtn)
+	{
+		bSingle = cSnrResult ? false : true;
+		return true;
+	}
+	else
+	{
+		strError = cardstatus.ErrorInfo(nRtn);
+		if (nRtn == 0x01)
+		{
+			strError += _T("\r\n") + cardstatus.ErrorReason(cardstatus.GetErrorCode());
+		}
+		return false;
+	}
+}
+
+
+void CCardOperator::ControlBuzzer()
+{
+	ISO14443A_MF ctrl;
+	ctrl.ControlBuzzer(0x16, 1);
+}
+
+
 void CCardOperator::DecodeCard(const CString & strCard, CString & strCardNo, int  & nLicense, int  & nCardType)
 {
 	strCardNo = strCard.Mid(0, 8);
